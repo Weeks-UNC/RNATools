@@ -24,13 +24,15 @@ def writeConstraints(outfile, pairs):
 
  
 
-def runShapeKnots(ShapeKnotsPath, seqfile, output, dmsfile=None, bpfile=None, consfile=None, cordero=False):
+def runShapeKnots(ShapeKnotsPath, seqfile, output, shapefile=None, dmsfile=None, bpfile=None, consfile=None, cordero=False):
 
     commands = [ShapeKnotsPath, '-m','1']
     if dmsfile is not None and not cordero:
         commands.extend(['-dmsnt',dmsfile])
     elif dmsfile is not None and cordero:
         commands.extend(['-dms',dmsfile])
+    if shapefile is not None:
+        commands.extend(['-sh', shapefile])
     if bpfile is not None:
         commands.extend(['-x', bpfile])
     if consfile is not None:
@@ -44,7 +46,7 @@ def runShapeKnots(ShapeKnotsPath, seqfile, output, dmsfile=None, bpfile=None, co
 
 
 
-def iterativeShapeKnots(ShapeKnotsPath, seqfile, outprefix, dmsfile=None, bpfile=None, maxPKs=5, cordero=False):
+def iterativeShapeKnots(ShapeKnotsPath, seqfile, outprefix, shapefile=None, dmsfile=None, bpfile=None, maxPKs=5, cordero=False):
 
     modelnumber = 0
     hasPK = True
@@ -64,7 +66,7 @@ def iterativeShapeKnots(ShapeKnotsPath, seqfile, outprefix, dmsfile=None, bpfile
             consfile = consfilename
 
         output = '{0}.{1}.ct'.format(outprefix, modelnumber)
-        runShapeKnots(ShapeKnotsPath, seqfile, output, dmsfile=dmsfile, bpfile=bpfile, 
+        runShapeKnots(ShapeKnotsPath, seqfile, output, dmsfile=dmsfile, shapefile=shapefile, bpfile=bpfile, 
                       consfile=consfile)
 
         ct = RNAtools.CT(output)
@@ -94,6 +96,7 @@ if __name__ == '__main__':
     prs.add_argument('seqfile', help='molecule name')
     prs.add_argument('outprefix', help="prefix to append to ct files. Note that .f.ct is the 'final' fold")
     prs.add_argument('--dmsfile', help='dms reactivity file')
+    prs.add_argument('--shapefile', help='SHAPE reactivity file')
     prs.add_argument('--bpfile', help='Pairmapper bp restraint file')
     prs.add_argument('--skpath', help='Path to ShapeKnots executable. If not defined, will try and use internally defined path. You can also modify this internal path if desired (will have to edit within code)')
     args = prs.parse_args()
@@ -111,6 +114,6 @@ if __name__ == '__main__':
             exit('Default path to ShapeKnots {} is invalid! File does not exist'.format(args.skpath))
 
 
-    iterativeShapeKnots(args.skpath, args.seqfile, args.outprefix, dmsfile=args.dmsfile, bpfile=args.bpfile)
+    iterativeShapeKnots(args.skpath, args.seqfile, args.outprefix, shapefile=args.shapefile, dmsfile=args.dmsfile, bpfile=args.bpfile)
     
     
