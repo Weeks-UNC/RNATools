@@ -73,7 +73,7 @@ def iterativeShapeKnots(ShapeKnotsPath, seqfile, outprefix, dmsfile=None, bpfile
         if pk[0] is None:
             hasPK = False
         else: 
-            print("PK found! {}".format(pk[0]))
+            print(("PK found! {}".format(pk[0])))
             pkpairs.extend(pk[0])  
         
 
