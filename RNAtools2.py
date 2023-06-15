@@ -226,7 +226,7 @@ class CT(object):
 
 
         #handle empty ct object case
-        if not self.ct:
+        if self.ct is None or len(self.ct)==0:
             print("empty ct object. Nothing to write")
             return
         
@@ -302,8 +302,7 @@ class CT(object):
             pi = self.num.index(nt)
             
             try:
-                if self.ct[i-1]==0 or self.ct[i+1]==0 or \
-                    self.ct[pi-1]==0 or self.ct[pi+1]==0:
+                if self.ct[i] != 0 and (self.ct[i-1] != self.ct[i]+1 or self.ct[i+1] != self.ct[i]-1):
                     jun.append(self.num[i])
             
             except IndexError:
@@ -1046,7 +1045,7 @@ def readSHAPE(fIN):
     shape = []
     seq = ''
     
-    with open(fIN, "rU") as inp:
+    with open(fIN, "r") as inp:
 
         for line in inp:
             spl = line.split()
@@ -1082,7 +1081,7 @@ def readSeq(fIN, type='RNAstructure'):
     
     # strip the input file of comments
     seqRaw = []
-    for i in open(fIN, "rU").read().split():
+    for i in open(fIN, "r").read().split():
         if len(i) == 0: continue
         if i[0] == ";": continue
         seqRaw.append(i)
